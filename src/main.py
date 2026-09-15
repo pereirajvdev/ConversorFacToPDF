@@ -6,12 +6,6 @@ FAC -> DOCX/PDF converter
 The FAC files used by the old system are binary files containing text records.
 This converter was built to handle the FAC samples supplied with this project.
 
-Usage:
-    python fac_to_docx.py arquivo.fac
-    python fac_to_docx.py arquivo.fac --pdf
-    python fac_to_docx.py *.fac --pdf
-    python fac_to_docx.py arquivo.fac --out pasta_saida
-
 Dependencies:
     pip install python-docx reportlab
 """
