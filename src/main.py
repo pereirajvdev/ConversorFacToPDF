@@ -137,12 +137,20 @@ def convert_to_pdf(fac_path: Path, output_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Converte arquivos .FAC antigos para DOCX ou PDF.")
-    parser.add_argument("files", nargs="+", type=Path, help="Um ou mais arquivos .FAC")
+    parser.add_argument("files", nargs="*", type=Path, help="Um ou mais arquivos .FAC")
     parser.add_argument("--pdf", action="store_true", help="Gera PDF em vez de DOCX")
     parser.add_argument("--out", type=Path, default=None, help="Pasta de saída")
     args = parser.parse_args()
 
-    output_dir = args.out or Path("convertidos")
+    input_dir = Path("data/input")
+    output_dir = args.out or Path("data/output")
+
+    files = args.files
+
+    if not files:
+        files = list(input_dir.glob("*.fac"))
+
+    output_dir = args.out or Path("data/output")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     for fac in args.files:
