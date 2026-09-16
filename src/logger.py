@@ -29,7 +29,6 @@ def write_log(level: str, message: str) -> None:
 
 
 def log_ok(message: str) -> None:
-    print(f"[OK] {message}")
     write_log("OK", message)
 
 

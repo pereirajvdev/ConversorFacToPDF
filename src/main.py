@@ -13,6 +13,7 @@ Dependencies:
 import argparse
 from pathlib import Path
 
+from tqdm import tqdm
 from .docx_converter import convert_to_docx
 from .pdf_converter import convert_to_pdf
 from .logger import log_error, log_ok, log_warning
@@ -62,7 +63,7 @@ def main() -> None:
     # Garante que a pasta de saída exista
     create_output_dir(output_dir)
 
-    for fac in files:
+    for fac in tqdm(files, desc="Convertendo", unit="arquivo"):
         if fac.suffix.lower() != ".fac":
             log_warning(f"Ignorado (não é .FAC): {fac}")
             continue
