@@ -169,8 +169,20 @@ def main() -> None:
     input_dir = project_dir / "data" / "input"
     output_dir = args.out or project_dir / "data" / "output"
 
+    # Aceita tanto arquivos individuais quanto pastas contendo arquivos .FAC
     # Se nenhum arquivo foi informado, usa os arquivos da pasta input
-    files = args.files
+    files = []
+
+    for path in args.files:
+        if path.is_dir():
+            files.extend(
+                item for item in path.iterdir()
+                if item.is_file() and item.suffix.lower() == ".fac"
+            )
+        elif path.is_file():
+            files.append(path)
+        else:
+            print(f"[ERRO] Caminho não encontrado: {path}")
 
     if not files:
         files = list(input_dir.glob("*.fac"))
