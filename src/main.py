@@ -136,27 +136,53 @@ def convert_to_pdf(fac_path: Path, output_path: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Converte arquivos .FAC antigos para DOCX ou PDF.")
-    parser.add_argument("files", nargs="*", type=Path, help="Um ou mais arquivos .FAC")
-    parser.add_argument("--pdf", action="store_true", help="Gera PDF em vez de DOCX")
-    parser.add_argument("--out", type=Path, default=None, help="Pasta de saída")
+    parser = argparse.ArgumentParser(
+        description="Converte arquivos .FAC antigos para DOCX ou PDF."
+    )
+
+    parser.add_argument(
+        "files",
+        nargs="*",
+        type=Path,
+        help="Um ou mais arquivos .FAC"
+    )
+
+    parser.add_argument(
+        "--pdf",
+        action="store_true",
+        help="Gera PDF em vez de DOCX"
+    )
+
+    parser.add_argument(
+        "--out",
+        type=Path,
+        default=None,
+        help="Pasta de saída"
+    )
+
     args = parser.parse_args()
 
-    input_dir = Path("data/input")
-    output_dir = args.out or Path("data/output")
+    # Raiz do projeto
+    project_dir = Path(__file__).resolve().parent.parent
 
+    # Pastas padrão
+    input_dir = project_dir / "data" / "input"
+    output_dir = args.out or project_dir / "data" / "output"
+
+    # Se nenhum arquivo foi informado, usa os arquivos da pasta input
     files = args.files
 
     if not files:
         files = list(input_dir.glob("*.fac"))
 
-    output_dir = args.out or Path("data/output")
+    # Garante que a pasta de saída exista
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    for fac in args.files:
+    for fac in files:
         if fac.suffix.lower() != ".fac":
             print(f"[AVISO] Ignorado (não é .FAC): {fac}")
             continue
+
         if not fac.is_file():
             print(f"[ERRO] Arquivo não encontrado: {fac}")
             continue
@@ -169,7 +195,9 @@ def main() -> None:
                 convert_to_pdf(fac, destination)
             else:
                 convert_to_docx(fac, destination)
+
             print(f"[OK] {fac.name} -> {destination}")
+
         except Exception as exc:
             print(f"[ERRO] {fac.name}: {exc}")
 
