@@ -15,6 +15,7 @@ from pathlib import Path
 
 from .docx_converter import convert_to_docx
 from .pdf_converter import convert_to_pdf
+from .logger import log_error, log_ok, log_warning
 from .file_manager import (
     find_fac_files,
     create_output_dir,
@@ -55,7 +56,7 @@ def main() -> None:
     input_dir = project_dir / "data" / "input"
     output_dir = args.out or project_dir / "data" / "output"
 
-    # Refatoração do files
+    # Coleta o files
     files = find_fac_files(args.files, input_dir)
 
     # Garante que a pasta de saída exista
@@ -63,11 +64,11 @@ def main() -> None:
 
     for fac in files:
         if fac.suffix.lower() != ".fac":
-            print(f"[AVISO] Ignorado (não é .FAC): {fac}")
+            log_warning(f"Ignorado (não é .FAC): {fac}")
             continue
 
         if not fac.is_file():
-            print(f"[ERRO] Arquivo não encontrado: {fac}")
+            log_error(f"Arquivo não encontrado: {fac}")
             continue
 
         extension = ".pdf" if args.pdf else ".docx"
@@ -79,10 +80,10 @@ def main() -> None:
             else:
                 convert_to_docx(fac, destination)
 
-            print(f"[OK] {fac.name} -> {destination}")
+            log_ok(f"{fac.name} -> {destination}")
 
         except Exception as exc:
-            print(f"[ERRO] {fac.name}: {exc}")
+            log_error(f"{fac.name}: {exc}")
 
 
 if __name__ == "__main__":
